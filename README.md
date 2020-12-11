@@ -3,7 +3,7 @@ Sudoku-solving program in various stages of evolution from command line interfac
 
 ## Project(s) Overview ##
 
-This program was the first non-trivial project I undertook after learning Python, after having played sudoku for many years and feeling like the process of solving a sudoku puzzle by hand was programmatic in a way.
+The first program in this repository ("sudoku_solver_v1") was the first non-trivial project I undertook after learning Python, after having played sudoku for many years and feeling like the process of solving a sudoku puzzle by hand was programmatic in a way.  This repo actually comprises multiple projects, however, that built upon the original project over the course of months of learning both Python and web development.
 
 A little effort has gone into cleaning up the code's formatting, but it still bears the marks of having been written by someone who had been learning Python for roughly a month when the first version was fully functional and was just beginning to scratch at the surface of appropriate situations for object-oriented programming with Python.
 
