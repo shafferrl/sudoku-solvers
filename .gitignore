@@ -1,0 +1,5 @@
+# Files and Directories to Exclude #
+####################################
+
+**/gray_area
+**/archive
