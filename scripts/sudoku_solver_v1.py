@@ -242,7 +242,6 @@ may not contain the same number more than once.''')
                 num_dict[puz_num].append(puz_tup)
                 puzzle_list[puz_tup[0]][puz_tup[1]] = puz_num
             except:
-                #print(inp_tup)
                 print('\nINPUT ERROR: Invalid input. \nPlease follow instructions in header.\n')
     puz_num += 1
 
@@ -254,9 +253,6 @@ isRetry = False
 while isInFin.lower() != 'y':
     if isRetry == False:
         pass
-        #################################
-        print_puzzle(puzzle_list)
-        #################################
     try:
         isInFin = input('\nAre the values in the puzzle correct? (Enter "y" or "n"): ')
         if isInFin.lower() != 'y' and isInFin.lower() != 'n':
@@ -348,7 +344,6 @@ may not contain the same number more than once.''')
 
 # Declare dictionary of possible coordinates of each number.  Will be populated with input coordinates after
 # functions are defined to preclude function definitions from being included in puzzle solution timer.
-
 poss_dict = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[]}
 
 # Keep list of coordinates for which the number in that coordinate is solved.
@@ -371,7 +366,6 @@ solver_solved = {1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]}
 # Keep count of how many values are solved.
 amt_solved = 0
 
-
 # Define function that determines if a possible coordinate for a given number is the only possible coordinate in its respective row.
 def isOnlyinRow(puz_no, poss_coord):
     for coord in poss_dict[puz_no]:
@@ -380,7 +374,6 @@ def isOnlyinRow(puz_no, poss_coord):
         else: continue
     return True
 
-
 # Define function that deterrmines if a possible coordinate for a given number is the only possible coordinate in its respective column.
 def isOnlyinCol(puz_no, poss_coord):
     for coord in poss_dict[puz_no]:
@@ -388,7 +381,6 @@ def isOnlyinCol(puz_no, poss_coord):
             return False
         else: continue
     return True
-
 
 # Define function that determines if a possible coordinate for a given number is the only possible coordinate it its respective 3x3 box
 def isOnlyinBox(puz_no, poss_coord):
@@ -400,7 +392,6 @@ def isOnlyinBox(puz_no, poss_coord):
                 else: continue
     return True
 
-
 # Declare and initialize dictionary that only retains newly solved numbers
 newNum_dict = {1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]}
 
@@ -410,8 +401,8 @@ new_elims = 0
 # Define function that combines "isOnly" functions into a single function that loops through all possibilities,
 # determines if there are any solutions, and updates the relevant data structure if (a) solution(s) is/are found
 def onlyOnes():
-
     global amt_solved, new_elims
+
     for p_no in poss_dict:
         for pd_coord in poss_dict[p_no]:
             if isOnlyinRow(p_no, pd_coord) or isOnlyinCol(p_no, pd_coord) or isOnlyinBox(p_no, pd_coord):
@@ -436,6 +427,7 @@ def onlyOnes():
 # Define function that eliminates possibilities if there is a conflict with solved numbers
 def directConflictElim():
     global new_elims
+
     for num in poss_dict:
         np_cds = []
         for po_cd in poss_dict[num]:
@@ -527,7 +519,6 @@ def newGuessSet():
     # Find the row, box, or column from which to take a guess based on least number of possibilities
     guessAmt.append(1)
     guessSetSize.append(len(guess_elmnt[1]))
-    # print(guessAmt)
     guessSets.append(guess_elmnt)
     guessDependElim.append([])
     for elcrd in guess_elmnt[1]:
@@ -541,8 +532,6 @@ def newGuessSet():
     newNum_dict[try_num].append(guess_elmnt[1][0])
     new_elims += len(guess_elmnt[1])
     amt_solved += 1
-    #print(guess_elmnt[1][0])
-
 
 
 # Define function that determines how to take a guess if it's needed to solve the puzzle
@@ -556,18 +545,15 @@ def guessIt():
 
     # If the puzzle remains unsolved because no solution could be isolated from possibilities:
     if len(solved_coords) < 81 and poss_count > 1 and not setExhausted:
-        #print("Guess Condition:  new guess set")
         newGuessSet()
         
     # If the solver 'locked up' because a previous guess (in potentially a chain of guesses)
     # was incorrect:
     elif len(solved_coords) < 81 and poss_count == 0 or setExhausted:
-        #print("Guess Condition: wrong previous guess")
 
         # If all possibilities from a set of guesses haven't been tried:
         if guessAmt[-1] < len(guessSets[-1][1]):
             setExhausted = False
-            #print("Guess Sub-Condition:  wrong guess, set not exhausted")
             
             # Re-add coordinates removed from pool of possibilities based on last guess to pool
             # and remove numbers solved in puzzle based on last guess from puzzle
@@ -584,7 +570,6 @@ def guessIt():
                 
             # Select next coordinate from the guess set and use that as guess
             guessAmt[-1] += 1
-            # print(guessAmt)
             num_dict[guessSets[-1][0]].append(guessSets[-1][1][guessAmt[-1]-1])
             amt_solved += 1
             for setcrd in guessSets[-1][1]:
@@ -620,7 +605,6 @@ def guessIt():
             # revisited the next time the loop goes around
             guessAmt.pop(-1)
             guessSetSize.pop(-1)
-            #print(guessAmt)
             guessSets.pop(-1)
             guessDependElim.pop(-1)
             new_elims = 1
@@ -639,27 +623,13 @@ import time
 # Record time at start of solve
 start_time = time.time()
 
-
 # Start solve by immediately eliminating coordinates as possibilities that conflict with
 # starting numbers by row, column, and 3x3 box
-
-######
-#for num in poss_dict:
-#    print(num, len(poss_dict[num]))
-#print("\n")
-######
-    
 for num in poss_dict:
     for r in range(len(puzzle_list)):
         for c in range(len(puzzle_list[r])):
             if not isAnyConflict(num, (r, c)):
                     poss_dict[num].append((r, c))
-
-######
-#for num in poss_dict:
-#    print(num, len(poss_dict[num]))
-#print("\n")
-######
     
 # Loop through, updating puzzle and other relevant data structures until no new coordinates are eliminated
 # (indicates that puzzle is either solved, unsolvable, or not solvable via currently included methods)       
@@ -667,16 +637,11 @@ x = 0
 while x < 1 or new_elims > 0 and x < 3500:
     new_elims = 0
     newNum_dict = {1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]}
-    #print('Iteration ', x+1)
     onlyOnes()
     directConflictElim()
     if new_elims == 0:
         onlyOnes()
         guessIt()
-    #for newno in newNum_dict:
-    #   if len(newNum_dict[newno]) >= 1:
-    #       print(newno, ':' , newNum_dict[newno])
-    #print(guessAmt)
     x += 1
 
 
@@ -687,9 +652,7 @@ duration = end_time - start_time
 # Print solved puzzle and the time it took to find a solution
 print('\nThe puzzle solved ' + str(amt_solved) + ' values and ' + f'{((amt_solved/(81-start_amt))*100):.0f}% of the open squares in\n'
       + f'{duration:.3f} seconds and ' + str(x) + ' iterations.')
-#print("Iterations :  ", x)
-#print("guessAmt:     ", guessAmt)
-#print("guessSetSize: ", guessSetSize)
+
 # Print out the results in a visually comprehensible manner
 print_puzzle(puzzle_list)
 
